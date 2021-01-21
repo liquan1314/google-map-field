@@ -7,6 +7,7 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { MapPolygonsComponent } from './components/map-polygons/map-polygons.component';
 import { LoginComponent } from './components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AsideComponent } from './public/aside/aside.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AppRoutingModule } from './app-routing.module';
     DataPanelComponent,
     TooltipComponent,
     MapPolygonsComponent,
-    LoginComponent
+    LoginComponent,
+    AsideComponent
   ],
   imports: [
     BrowserModule,
