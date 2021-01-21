@@ -1,7 +1,7 @@
 #map{
   width: 100vw;
   height: 100vh;
-  background: #fff url('./image/bgImg.png') no-repeat center/cover;
+  background: #fff url('../../../assets/image/login/bgImg.png') no-repeat center/cover;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,7 +20,7 @@
       width: 120px;
       height: 120px;
       margin-top: 68px;
-      background: #fff url("./image/logo.png") no-repeat scroll center/cover;
+      background: #fff url("../../../assets/image/login/logo.png") no-repeat scroll center/cover;
       border-radius: 50%;
     }
     .welcome{
@@ -52,7 +52,7 @@
       margin-top: 72px;
       display: flex;
       align-items: center;
-      background: url('./image/Group.png') no-repeat scroll center/cover;
+      background: url('../../../assets/image/login/Group.png') no-repeat scroll center/cover;
       cursor: pointer;
     }
   }
