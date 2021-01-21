@@ -1,0 +1,118 @@
+#mapPolygons {
+  width: 100vw;
+  height: 100vh;
+  background: #fff url("../../../assets/image/mapPolygon/bgImg1.png") no-repeat center/cover;
+  position: relative;
+
+  .imgHeader {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .personalInfo {
+    position: absolute;
+    top: 52px;
+    right: 24px;
+    width: 270px;
+    height: 214px;
+    background: #FFFFFF;
+    border: 1px solid #EAEAEA;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    >img{
+      width: 80px;
+      height: 80px;
+      margin-top: 16px;
+    }
+    >h5{
+      margin-top: 21px;
+      font-family: Google Sans;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: rgba(0, 0, 0, 0.87);
+    }
+    >p{
+      margin-top: 6px;
+      font-family: Google Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 18px;
+      /* identical to box height */
+      color: rgba(0, 0, 0, 0.54);
+    }
+    >span{
+      margin-top: 21px;
+      font-family: Google Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 18px;
+      /* identical to box height */
+      /* black-87% */
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+  .asideInfo{
+    position: absolute;
+    bottom: 104px;
+    right: 20px;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 150px;
+    .threeD{
+      width: 29px;
+      height: 29px;
+      background-color: #fff;
+      //background: #fff url("../../../assets/image/mapPolygon/Rectangle 2.png") no-repeat center/cover;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 2px 6px rgba(60, 64, 67, 0.15);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+    .iconPath{
+      margin-top: 4px;
+      width: 29px;
+      height: 29px;
+      background: #FFFFFF;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 2px 6px rgba(60, 64, 67, 0.15);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .asideInfoGroup1{
+      margin-top: 4px;
+      width: 29px;
+      height: 57px;
+      background: #FFFFFF;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 2px 6px rgba(60, 64, 67, 0.15);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .asideInfoGroup2{
+      margin-top: 4px;
+      width: 29px;
+      height: 57px;
+      background: #FFFFFF;
+      box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 2px 6px rgba(60, 64, 67, 0.15);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+  }
+}
