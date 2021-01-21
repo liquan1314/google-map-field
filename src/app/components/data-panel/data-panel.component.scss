@@ -1,0 +1,109 @@
+#dataPanel{
+  width: 100vw;
+  height: 100vh;
+  background: #fff url('../../../assets/image/datapanel/image 3.png')  center;
+  position: relative;
+  .dataPanelHeader{
+    position: fixed;
+    top: 7px;
+    right: 120px;
+    width: 896px;
+    height: 84px;
+    background: url("../../../assets/image/datapanel/Rectangle 177.png") no-repeat center;
+    ul{
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      list-style-type: none;
+      line-height: 84px;
+      li{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        span{
+          font-weight: 500;
+          margin-right: 15px;
+        }
+
+      }
+      li:nth-child(even){
+          width: 1px;
+          height: 20px;
+          background: #dedede;
+      }
+    }
+  }
+  .dataPanelAside{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 528px;
+    height: 100%;
+    background-color: #fff;
+    .AsideMainHeader{
+      width: 100%;
+      height: 98px;
+      background: url("../../../assets/image/datapanel/Rectangle 163.png") no-repeat center;
+      .AsideMainHeaderGroup1{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        .title{
+          font-family: Google Sans;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 22px;
+          line-height: 28px;
+          color: rgba(0, 0, 0, 0.87);
+          padding-left: 5px;
+        }
+        .AsideMainHeader-icon{
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          line-height: 28px;
+          img{
+            margin-right: 20px;
+          }
+        }
+      }
+      .AsideMainHeaderContent{
+        font-family: Google Sans;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 18px;
+        color: rgba(0, 0, 0, 0.6);
+        margin-top: 17px;
+        padding-left: 5px;
+      }
+    }
+    .AsideIcon{
+      width: 23px;
+      height: 58px;
+      position: absolute;
+      top: 20px;
+      right: -23px;
+      background: url("../../../assets/image/datapanel/Rectangle 3.png") no-repeat center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      img{
+        transform: rotate(90deg);
+      }
+    }
+  }
+  .dataPanelImg{
+    position: fixed;
+    top: 200px;
+    right: 400px;
+    display: flex;
+    flex-direction: column;
+    img{
+      margin-top: 9px;
+    }
+  }
+}
