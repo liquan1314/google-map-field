@@ -8,13 +8,14 @@ import { MapPolygonsComponent } from './components/map-polygons/map-polygons.com
 import { LoginComponent } from './components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     DataPanelComponent,
     TooltipComponent,
     MapPolygonsComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
