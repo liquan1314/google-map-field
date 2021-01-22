@@ -7,6 +7,8 @@ import { TooltipComponent } from './components/tooltip/tooltip.component';
 import { MapPolygonsComponent } from './components/map-polygons/map-polygons.component';
 import { LoginComponent } from './components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AsideComponent } from './public/aside/aside.component';
+import { UserHeaderComponent } from './public/user-header/user-header.component';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import { AppRoutingModule } from './app-routing.module';
     TooltipComponent,
     MapPolygonsComponent,
     LoginComponent,
+    AsideComponent,
+    UserHeaderComponent,
   ],
   imports: [
     BrowserModule,

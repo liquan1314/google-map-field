@@ -1,3 +1,8 @@
+@mixin flexCenter{
+  display: flex;
+  align-items: center;
+}
+
 #dataPanel{
   width: 100vw;
   height: 100vh;
@@ -11,15 +16,13 @@
     height: 84px;
     background: url("../../../assets/image/datapanel/Rectangle 177.png") no-repeat center;
     ul{
-      display: flex;
+      @include flexCenter;
       justify-content: space-around;
-      align-items: center;
       list-style-type: none;
       line-height: 84px;
       li{
-        display: flex;
+        @include flexCenter;
         justify-content: center;
-        align-items: center;
         cursor: pointer;
         span{
           font-weight: 500;
@@ -46,9 +49,8 @@
       height: 98px;
       background: url("../../../assets/image/datapanel/Rectangle 163.png") no-repeat center;
       .AsideMainHeaderGroup1{
-        display: flex;
+        @include flexCenter;
         justify-content: space-between;
-        align-items: center;
         margin-top: 10px;
         .title{
           font-family: Google Sans;
@@ -60,9 +62,8 @@
           padding-left: 5px;
         }
         .AsideMainHeader-icon{
-          display: flex;
+          @include flexCenter;
           justify-content: space-between;
-          align-items: center;
           line-height: 28px;
           img{
             margin-right: 20px;
@@ -87,9 +88,8 @@
       top: 20px;
       right: -23px;
       background: url("../../../assets/image/datapanel/Rectangle 3.png") no-repeat center;
-      display: flex;
+      @include flexCenter;
       justify-content: center;
-      align-items: center;
       cursor: pointer;
       img{
         transform: rotate(90deg);
