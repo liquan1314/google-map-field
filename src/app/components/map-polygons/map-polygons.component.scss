@@ -1,3 +1,8 @@
+@mixin flexCenter{
+  display: flex;
+  align-items: center;
+}
+
 #mapPolygons {
   width: 100vw;
   height: 100vh;
@@ -13,8 +18,7 @@
     border: 1px solid #EAEAEA;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
     border-radius: 8px;
-    display: flex;
-    align-items: center;
+    @include flexCenter;
     flex-direction: column;
     >img{
       width: 80px;
