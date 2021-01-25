@@ -1,4 +1,6 @@
 <div id="dataPanel">
+  <div #map id="map">
+  </div>
   <div class="dataPanelHeader">
     <ul>
       <li>
@@ -34,21 +36,21 @@
   </div>
   <div class="dataPanelAside">
     <div class="AsideMain">
-        <div class="AsideMainHeader">
-          <div class="AsideMainHeaderGroup1">
-            <div class="title">Field 345</div>
-            <div class="AsideMainHeader-icon">
-              <img src="assets/image/datapanel/more_horiz_24px.png" alt="more的图片">
-              <img src="assets/image/datapanel/clear_24px.png" alt="clear的图片">
-            </div>
-          </div>
-          <div class="AsideMainHeaderContent">
-            AsideMainHeader
+      <div class="AsideMainHeader">
+        <div class="AsideMainHeaderGroup1">
+          <div class="title">Field 345</div>
+          <div class="AsideMainHeader-icon">
+            <img src="assets/image/datapanel/more_horiz_24px.png" alt="more的图片">
+            <img src="assets/image/datapanel/clear_24px.png" alt="clear的图片">
           </div>
         </div>
+        <div class="AsideMainHeaderContent">
+          AsideMainHeader
+        </div>
+      </div>
     </div>
-    <div class="AsideIcon">
-      <img src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
+    <div class="AsideIcon" (click) = 'onTransForm($event)'>
+        <img src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>
   </div>
   <div class="dataPanelImg">

@@ -2,12 +2,15 @@
   display: flex;
   align-items: center;
 }
-
 #dataPanel{
   width: 100vw;
   height: 100vh;
-  background: #fff url('../../../assets/image/datapanel/image 3.png')  center;
-  position: relative;
+  #map{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+  }
   .dataPanelHeader{
     position: fixed;
     top: 7px;
@@ -31,19 +34,21 @@
 
       }
       li:nth-child(even){
-          width: 1px;
-          height: 20px;
-          background: #dedede;
+        width: 1px;
+        height: 20px;
+        background: #dedede;
       }
     }
   }
   .dataPanelAside{
     position: absolute;
+    transition: 1s;
     top: 0;
     left: 0;
     width: 528px;
     height: 100%;
     background-color: #fff;
+    transform: translateX(-100%);
     .AsideMainHeader{
       width: 100%;
       height: 98px;
@@ -85,7 +90,7 @@
       width: 23px;
       height: 58px;
       position: absolute;
-      top: 20px;
+      top: 80px;
       right: -23px;
       background: url("../../../assets/image/datapanel/Rectangle 3.png") no-repeat center;
       @include flexCenter;
@@ -106,4 +111,5 @@
       margin-top: 9px;
     }
   }
+
 }
