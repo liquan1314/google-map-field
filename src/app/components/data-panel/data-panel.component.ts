@@ -1,9 +1,7 @@
-
 import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {GapiService} from "../../services/gapi.service";
 import {JsonService} from '../../services/json.service';
-
 @Component({
   selector: 'app-data-panel',
   templateUrl: './data-panel.component.html',
