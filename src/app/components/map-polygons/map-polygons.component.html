@@ -2,9 +2,9 @@
   <app-user-header></app-user-header>
   <div class="personalInfo">
     <img src="assets/image/mapPolygon/user.png" alt="headerInfoImg">
-    <h5>Sherry Ferguson</h5>
-    <p>SherryFerguson@gmail.com</p>
-    <span>Log out</span>
+    <h5>{{loginName}}</h5>
+    <p>{{loginEmail}}</p>
+    <span (click)="signOut()">Log out</span>
   </div>
   <app-aside></app-aside>
 </div>

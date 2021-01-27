@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule,Routes} from '@angular/router';
+import {AuthGuard} from './auth/auth.guard';
 /*
   生成一个路由模块，在cli中运行指令
    ng g module app-routing --flat --module=app
@@ -16,14 +17,14 @@ import {TooltipComponent} from './components/tooltip/tooltip.component';
 let routes: Routes=[
   {path:'login',component:LoginComponent},
   {path:'datapanel',component:DataPanelComponent},
-  {path:'mappolygon',component:MapPolygonsComponent},
+  {path:'mappolygon',component:MapPolygonsComponent,canActivate:[AuthGuard]},
   {path:'tooltip',component:TooltipComponent},
   {path:'',redirectTo:'/login',pathMatch:'full'} //redirect login
 ]
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes,)
   ],
   exports:[RouterModule]
 })
