@@ -97,9 +97,23 @@
       justify-content: center;
       cursor: pointer;
       img{
+        transition: 1s;
         transform: rotate(90deg);
       }
     }
+    .transformIcon{
+      transform: rotate(270deg) !important;
+    }
+    .transformIcon1{
+      transform: rotate(90deg) !important;
+    }
+
+  }
+  .translateParent{
+    transform: translateX(0) !important;
+  }
+  .translateParent1{
+    transform: translateX(-100%) !important;
   }
   .dataPanelImg{
     position: fixed;

@@ -34,7 +34,7 @@
       <li></li>
     </ul>
   </div>
-  <div class="dataPanelAside">
+  <div [ngClass]="['dataPanelAside', flag ? 'translateParent' : 'translateParent1']">
     <div class="AsideMain">
       <div class="AsideMainHeader">
         <div class="AsideMainHeaderGroup1">
@@ -49,8 +49,8 @@
         </div>
       </div>
     </div>
-    <div class="AsideIcon" (click) = 'onTransForm($event)'>
-        <img src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
+    <div class = 'AsideIcon' (click) = 'onTransForm($event)'>
+        <img [ngClass]=" flag ? 'transformIcon1':'transformIcon'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>
   </div>
   <div class="dataPanelImg">
