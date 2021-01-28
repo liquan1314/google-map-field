@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+//引入gapi服务
+import {GapiService} from './services/gapi.service';
 import { AppComponent } from './app.component';
 import { DataPanelComponent } from './components/data-panel/data-panel.component';
 import { TooltipComponent } from './components/tooltip/tooltip.component';
@@ -25,7 +27,7 @@ import { UserHeaderComponent } from './public/user-header/user-header.component'
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [GapiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

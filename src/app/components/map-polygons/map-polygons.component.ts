@@ -1,5 +1,6 @@
 import { Component, OnInit,NgZone } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
+import {GapiService} from "../../services/gapi.service";
 
 @Component({
   selector: 'app-map-polygons',
@@ -9,7 +10,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class MapPolygonsComponent implements OnInit {
   loginName:string;
   loginEmail:string;
-  constructor(private route: ActivatedRoute,private router: Router,private zone:NgZone) { }
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private zone:NgZone,
+              private gapiService:GapiService) { }
 
   ngOnInit(): void {
     this.getValue()
@@ -21,17 +25,18 @@ export class MapPolygonsComponent implements OnInit {
     })
   }
   signOut(){
-    gapi.load('auth2', ()=>{
-      gapi.auth2.init({
-        client_id:'230743352788-70rprt9h848dccqharm10iv934hh1mjk.apps.googleusercontent.com'
-      }).then(data=>{
-        data.signOut().then(()=>{
-          this.zone.run(()=>{
-            this.router.navigate(['./login'])
-          })
-        })
-      })
-    })
+    this.gapiService.initAuth2()
+    // gapi.load('auth2', ()=>{
+    //   gapi.auth2.init({
+    //     client_id:'230743352788-70rprt9h848dccqharm10iv934hh1mjk.apps.googleusercontent.com'
+    //   }).then(data=>{
+    //     // data.signOut().then(()=>{
+    //     //   this.zone.run(()=>{
+    //     //     this.router.navigate(['./login'])
+    //     //   })
+    //     // })
+    //   })
+    // })
 
   }
 
