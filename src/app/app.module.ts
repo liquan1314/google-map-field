@@ -1,9 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+
 //引入gapi服务
 import {GapiService} from './services/gapi.service';
-import { AppComponent } from './app.component';
+//引入服务
+import {JsonService} from './services/json.service';
+//引入angular的客户端请求的包
+import {HttpClientModule} from '@angular/common/http';
+//引入路由
+import {AppComponent } from './app.component';
+//引入组件
 import { DataPanelComponent } from './components/data-panel/data-panel.component';
 import { LoginComponent } from './components/login/login.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,9 +28,10 @@ import { UserHeaderComponent } from './public/user-header/user-header.component'
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [GapiService],
+  providers: [GapiService,JsonService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
