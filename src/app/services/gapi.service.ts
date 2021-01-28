@@ -9,9 +9,8 @@ export class GapiService {
   constructor(private zone:NgZone,private router:Router) {
 
   }
-
   navigateMap(value) {
-    this.router.navigate(['./mappolygon'],value).then(data=>{
+    this.router.navigate(['./datapanel'],value).then(data=>{
       console.log(data)
     }).catch(err=>{
       console.log(err)
