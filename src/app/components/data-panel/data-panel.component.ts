@@ -102,6 +102,7 @@ export class DataPanelComponent implements OnInit {
     let multilyPolygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
+      strokeWeight:0
     })
 
     multilyPolygon.setMap(this.googleMap)
@@ -124,6 +125,7 @@ export class DataPanelComponent implements OnInit {
     let polygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
+      strokeWeight:0
     })
     polygon.setMap(this.googleMap)
   }
