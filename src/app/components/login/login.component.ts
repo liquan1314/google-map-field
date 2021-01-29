@@ -24,7 +24,6 @@ export class LoginComponent implements OnInit {
   //开始初始化，得到google Client的APi操作方法，用gapi去操做它们
   startApp() {
     this.gapiService.initAuth2(this.btnText)
-
   }
 
 }

@@ -1,19 +1,22 @@
 import {Injectable, NgZone} from '@angular/core';
 import {Router} from "@angular/router";
+import {ObservabService} from "./observab.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GapiService {
   auth2:any;
-  constructor(private zone:NgZone,private router:Router) {
+  constructor(private zone:NgZone,private router:Router,
+              public observab: ObservabService) {
 
   }
+  //登陆成功跳转路由
   navigateMap(value) {
-    this.router.navigate(['./datapanel'],value).then(data=>{
+    this.router.navigate(['./datapanel']).then(data=>{
       console.log(data)
     }).catch(err=>{
-      console.log(err)
+      console.error(err)
     })
   }
 
@@ -45,12 +48,17 @@ export class GapiService {
       let params:any = {};
       let queryMap:any={};
       //得到我们想得到的对象
-      params.name = profile.getName()
+      params.personname = profile.getName()
       params.Email = profile.getEmail()
+      params.url = profile.getImageUrl()
       //配置参数
       queryMap = {
         queryParams: params
       }
+
+      //触发观察这模式，因为数据变动触发了订阅
+      this.observab.emit(params)
+
       this.zone.run(()=>{
         this.navigateMap(queryMap)
       })

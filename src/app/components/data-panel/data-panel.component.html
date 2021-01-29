@@ -54,19 +54,16 @@
         <img [ngClass]=" flag ? 'transformIcon1':'transformIcon'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>
   </div>
-  <div class="dataPanelImg">
+  <div class="dataPanelImg" *ngIf="flag">
     <img src="assets/image/datapanel/Ellipse%203.png" alt="Ellipse的图片">
     <img src="assets/image/datapanel/Vector%2012.png" alt="Vector的图片">
   </div>
-<<<<<<< HEAD
-  <div class="personalInfo">
-    <img src="assets/image/mapPolygon/user.png" alt="headerInfoImg">
+  <div class="personalInfo" *ngIf="showHidden">
+    <img [src]="imgUrl" alt="headerInfoImg">
     <h5>{{loginName}}</h5>
     <p>{{loginEmail}}</p>
     <span (click)="signOut()">Log out</span>
   </div>
   <app-aside></app-aside>
-  <app-user-header></app-user-header>
-=======
->>>>>>> be46b2a ('这是显示数据和填充颜色')
+  <app-user-header [imgUrl] = 'imgUrl' (showHidden)="getChild($event)"></app-user-header>
 </div>
