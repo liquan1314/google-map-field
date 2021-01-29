@@ -2,12 +2,64 @@
   display: flex;
   align-items: center;
 }
-
 #dataPanel{
   width: 100vw;
   height: 100vh;
-  background: #fff url('../../../assets/image/datapanel/image 3.png')  center;
-  position: relative;
+  .personalInfo{
+    position: absolute;
+    top: 52px;
+    right: 24px;
+    width: 270px;
+    height: 214px;
+    background: #FFFFFF;
+    border: 1px solid #EAEAEA;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    @include flexCenter;
+    flex-direction: column;
+    >img{
+      width: 80px;
+      height: 80px;
+      margin-top: 16px;
+    }
+    >h5{
+      margin-top: 21px;
+      font-family: Google Sans;
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      color: rgba(0, 0, 0, 0.87);
+    }
+    >p{
+      margin-top: 6px;
+      font-family: Google Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 18px;
+      /* identical to box height */
+      color: rgba(0, 0, 0, 0.54);
+    }
+    >span{
+      margin-top: 21px;
+      font-family: Google Sans;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 18px;
+      /* identical to box height */
+      /* black-87% */
+      color: rgba(0, 0, 0, 0.87);
+      cursor: pointer;
+    }
+  }
+  #map{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+  }
   .dataPanelHeader{
     position: fixed;
     top: 7px;
@@ -31,19 +83,21 @@
 
       }
       li:nth-child(even){
-          width: 1px;
-          height: 20px;
-          background: #dedede;
+        width: 1px;
+        height: 20px;
+        background: #dedede;
       }
     }
   }
   .dataPanelAside{
     position: absolute;
+    transition: 1s;
     top: 0;
     left: 0;
     width: 528px;
     height: 100%;
     background-color: #fff;
+    transform: translateX(-100%);
     .AsideMainHeader{
       width: 100%;
       height: 98px;
@@ -85,16 +139,30 @@
       width: 23px;
       height: 58px;
       position: absolute;
-      top: 20px;
+      top: 80px;
       right: -23px;
       background: url("../../../assets/image/datapanel/Rectangle 3.png") no-repeat center;
       @include flexCenter;
       justify-content: center;
       cursor: pointer;
       img{
+        transition: 1s;
         transform: rotate(90deg);
       }
     }
+    .transformIcon{
+      transform: rotate(270deg) !important;
+    }
+    .transformIcon1{
+      transform: rotate(90deg) !important;
+    }
+
+  }
+  .translateParent{
+    transform: translateX(0) !important;
+  }
+  .translateParent1{
+    transform: translateX(-100%) !important;
   }
   .dataPanelImg{
     position: fixed;
@@ -106,4 +174,5 @@
       margin-top: 9px;
     }
   }
+
 }

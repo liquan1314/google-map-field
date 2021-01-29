@@ -11,14 +11,10 @@ import {AuthGuard} from './auth/auth.guard';
 
 import {DataPanelComponent} from './components/data-panel/data-panel.component';
 import {LoginComponent} from './components/login/login.component';
-import {MapPolygonsComponent} from './components/map-polygons/map-polygons.component';
-import {TooltipComponent} from './components/tooltip/tooltip.component';
 
 let routes: Routes=[
   {path:'login',component:LoginComponent},
-  {path:'datapanel',component:DataPanelComponent},
-  {path:'mappolygon',component:MapPolygonsComponent,canActivate:[AuthGuard]},
-  {path:'tooltip',component:TooltipComponent},
+  {path:'datapanel',component:DataPanelComponent,canActivate:[AuthGuard]},
   {path:'',redirectTo:'/login',pathMatch:'full'} //redirect login
 ]
 @NgModule({
