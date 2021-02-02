@@ -1,15 +1,15 @@
-import {AfterViewInit, Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {GapiService} from "../../services/gapi.service";
 import {JsonService} from '../../services/json.service';
 import {ObservabService} from "../../services/observab.service";
-
+import {DataLevel} from '../../interfaces/data-level';
 @Component({
   selector: 'app-data-panel',
   templateUrl: './data-panel.component.html',
   styleUrls: ['./data-panel.component.scss']
 })
-export class DataPanelComponent implements OnInit,AfterViewInit {
+export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
   @ViewChild(('map')) map;
   @ViewChild(('infowindow')) infowindow;
   googleMap: any; //地图
@@ -20,6 +20,10 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
   imgUrl: any; //路径的位置
   showHidden: boolean = false; //资料卡片显示或隐藏
   infoWindow: any;
+  US:any;
+  NE:any;
+  OE:any;
+  filed:any;
 
   constructor(private route: ActivatedRoute,
               private gapiService: GapiService,
@@ -35,6 +39,10 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
 
   ngAfterViewInit() {
     this.initMap()
+  }
+  ngOnDestroy() {
+    //清楚资源
+    this.googleMap.removeAllListeners()
   }
 
   //得到服务中的地图数据
@@ -93,21 +101,23 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
       const arr = item.data[0].payload['geo_data']['geometry'][0]['polygon'][0]['loop']
       const type = item.properties['crop_type'][0]['value'];
       const time = item.data[0]['time_range']['start']['seconds']
+      const dataLevel = item.data[0]['administration_level']
       // console.log(item.data[0]['time_range'])
       //进行判断是是polygon和multiplePolygon
       if (arr.length !== 1) {
         //这里是multiplePolygon
-        this.paintMultiPlePolygon(arr, type, time)
+        this.paintMultiPlePolygon(arr, type, time,dataLevel)
       } else {
         /*单个polygon*/
-        this.paintPolygon(arr, type, time)
+        this.paintPolygon(arr, type, time,dataLevel)
       }
     })
   }
 
   //绘制multiplePolygon
-  paintMultiPlePolygon(data, type, time) {
+  paintMultiPlePolygon(data, type, time,dataLevel) {
     time = this.transformTime(time)
+    dataLevel = this.getDataLevel(dataLevel)
     let arr = []
     let color = ''
     //对颜色的选择
@@ -130,6 +140,8 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
       fillColor: color,
       strokeWeight: 0
     })
+    multilyPolygon.setMap(this.googleMap)
+
     multilyPolygon.addListener('mouseover', (e) => {
             if(!this.infoWindow){
               this.infoWindowSet(time,e)
@@ -139,12 +151,16 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
     multilyPolygon.addListener('mouseout',(e)=>{
           this.infoWindow.close()
     })
-    multilyPolygon.setMap(this.googleMap)
+    //点击事件
+    multilyPolygon.addListener('click',()=>{
+      this.paintValue(dataLevel)
+    })
   }
 
 
   //绘制简单的polygon
-  paintPolygon(data, type, time) {
+  paintPolygon(data, type, time,dataLevel) {
+    dataLevel = this.getDataLevel(dataLevel)
     time = this.transformTime(time); //得到时间
     let arr = data[0].point;
     let color = ''
@@ -169,7 +185,10 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
     polygon.addListener('mouseout',(e)=>{
         this.infoWindow.close()
     })
-
+    polygon.addListener('click',()=> {
+        this.paintValue(dataLevel)
+      }
+    )
   }
 
   infoWindowSet(time,e){
@@ -217,4 +236,18 @@ export class DataPanelComponent implements OnInit,AfterViewInit {
     let year = data.getFullYear()
     return year
   }
+
+  //得到data——level中的数值，将它分割开来
+  getDataLevel(datalevel) {
+    const arrDataLevel = datalevel.split('/')
+    return arrDataLevel;
+  }
+  //给导航栏上添加数据
+  paintValue(dataLevel){
+    this.US = dataLevel[0];
+    this.NE = dataLevel[1]
+    this.OE = dataLevel[2]
+    this.filed = dataLevel[3]
+  }
+
 }
