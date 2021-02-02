@@ -1,5 +1,8 @@
+
 <div id="dataPanel">
-  <div class="dataPanelHeader">
+  <div #map id="map">
+  </div>
+  <div class="dataPanelHeader" *ngIf="iconFlag">
     <ul>
       <li>
         <span>location: USA</span>
@@ -32,27 +35,35 @@
       <li></li>
     </ul>
   </div>
-  <div class="dataPanelAside">
+  <div [ngClass]="['dataPanelAside', iconFlag ? 'translateParentShow' : 'translateParentHidden']">
     <div class="AsideMain">
-        <div class="AsideMainHeader">
-          <div class="AsideMainHeaderGroup1">
-            <div class="title">Field 345</div>
-            <div class="AsideMainHeader-icon">
-              <img src="assets/image/datapanel/more_horiz_24px.png" alt="more的图片">
-              <img src="assets/image/datapanel/clear_24px.png" alt="clear的图片">
-            </div>
-          </div>
-          <div class="AsideMainHeaderContent">
-            AsideMainHeader
+      <div class="AsideMainHeader">
+        <div class="AsideMainHeaderGroup1">
+          <div class="title">Field 345</div>
+          <div class="AsideMainHeader-icon">
+            <img src="assets/image/datapanel/more_horiz_24px.png" alt="more的图片">
+            <img src="assets/image/datapanel/clear_24px.png" alt="clear的图片">
           </div>
         </div>
+        <div class="AsideMainHeaderContent">
+          AsideMainHeader
+        </div>
+      </div>
     </div>
-    <div class="AsideIcon">
-      <img src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
+    <div class = 'AsideIcon' (click) = 'onTransForm($event)'>
+        <img [ngClass]=" iconFlag ? 'transformIconHidden':'transformIconShow'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>
   </div>
-  <div class="dataPanelImg">
+  <div class="dataPanelImg" *ngIf="iconFlag">
     <img src="assets/image/datapanel/Ellipse%203.png" alt="Ellipse的图片">
     <img src="assets/image/datapanel/Vector%2012.png" alt="Vector的图片">
   </div>
+  <div class="personalInfo" *ngIf="showHidden">
+    <img [src]="imgUrl" alt="headerInfoImg">
+    <h5>{{loginName}}</h5>
+    <p>{{loginEmail}}</p>
+    <span (click)="signOut()">Log out</span>
+  </div>
+  <app-aside></app-aside>
+  <app-user-header [imgUrl] = 'imgUrl' (showHidden)="getChild($event)"></app-user-header>
 </div>
