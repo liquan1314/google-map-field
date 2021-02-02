@@ -1,4 +1,4 @@
-import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {GapiService} from "../../services/gapi.service";
 import {JsonService} from '../../services/json.service';
@@ -9,14 +9,14 @@ import {ObservabService} from "../../services/observab.service";
   templateUrl: './data-panel.component.html',
   styleUrls: ['./data-panel.component.scss']
 })
-export class DataPanelComponent implements OnInit {
+export class DataPanelComponent implements OnInit,AfterViewInit {
   @ViewChild(('map')) map;
   @ViewChild(('infowindow')) infowindow;
   googleMap: any; //地图
   marker: any; //坐标
   loginName: any; //登录的名字
   loginEmail: any; //登录的Email
-  flag: boolean = true;  //这是布尔表达式，确定图标的旋转开关
+  iconFlag: boolean = true;  //这是布尔表达式，确定图标的旋转开关
   imgUrl: any; //路径的位置
   showHidden: boolean = false; //资料卡片显示或隐藏
   infoWindow: any;
@@ -66,23 +66,19 @@ export class DataPanelComponent implements OnInit {
 
   //点击图标事件
   onTransForm(e) {
-    if (this.flag == true) {
-      this.flag = false;
-    } else {
-      this.flag = true;
-    }
+      this.iconFlag = !this.iconFlag;
   }
 
   getValue() {
-    let data = this.observa.getData();
+    const data = this.observa.getData();
     this.loginEmail = data.personname;
     this.loginName = data.Email;
     this.imgUrl = data.url;
   }
 
   //得到子组件的数据
-  getChild(e) {
-    this.showHidden = e;
+  getChild(b) {
+    this.showHidden = b;
   }
 
   //登出功能
@@ -94,9 +90,9 @@ export class DataPanelComponent implements OnInit {
   paintMap(json) {
     json.forEach(item => {
       //得到是polygon和multiplePolygon的数组点
-      let arr = item.data[0].payload['geo_data']['geometry'][0]['polygon'][0]['loop']
-      let type = item.properties['crop_type'][0]['value'];
-      let time = item.data[0]['time_range']['start']['seconds']
+      const arr = item.data[0].payload['geo_data']['geometry'][0]['polygon'][0]['loop']
+      const type = item.properties['crop_type'][0]['value'];
+      const time = item.data[0]['time_range']['start']['seconds']
       // console.log(item.data[0]['time_range'])
       //进行判断是是polygon和multiplePolygon
       if (arr.length !== 1) {
@@ -136,10 +132,7 @@ export class DataPanelComponent implements OnInit {
     })
     multilyPolygon.addListener('mouseover', (e) => {
             if(!this.infoWindow){
-              //判断infowindow是否存在，不在就添加，在的话先取消当前的infowindow在添加
-              this.initInfoWindow(time)
-              this.infoWindow.setPosition(e.latLng)
-              this.infoWindow.open(this.googleMap)
+              this.infoWindowSet(time,e)
             }
     })
     //当离开当前的polygon的时候
@@ -171,10 +164,7 @@ export class DataPanelComponent implements OnInit {
     })
     polygon.setMap(this.googleMap)
     polygon.addListener('mouseover', (e) => {
-      //判断infowindow是否存在，不在就添加，在的话先取消当前的infowindow在添加
-      this.initInfoWindow(time)
-      this.infoWindow.setPosition(e.latLng)
-      this.infoWindow.open(this.googleMap)
+        this.infoWindowSet(time,e)
     })
     polygon.addListener('mouseout',(e)=>{
         this.infoWindow.close()
@@ -182,6 +172,12 @@ export class DataPanelComponent implements OnInit {
 
   }
 
+  infoWindowSet(time,e){
+    //判断infowindow是否存在，不在就添加，在的话先取消当前的infowindow在添加
+    this.initInfoWindow(time)
+    this.infoWindow.setPosition(e.latLng)
+    this.infoWindow.open(this.googleMap)
+  }
 
   //选择颜色的函数
   selsectColor(color, type) {

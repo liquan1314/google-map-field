@@ -149,18 +149,18 @@
         transform: rotate(90deg);
       }
     }
-    .transformIcon{
+    .transformIconShow{
       transform: rotate(270deg) !important;
     }
-    .transformIcon1{
+    .transformIconHidden{
       transform: rotate(90deg) !important;
     }
 
   }
-  .translateParent{
+  .translateParentShow{
     transform: translateX(0) !important;
   }
-  .translateParent1{
+  .translateParentHidden{
     transform: translateX(-100%) !important;
   }
   .dataPanelImg{

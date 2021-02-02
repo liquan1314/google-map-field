@@ -8,7 +8,7 @@ import {ObservabService} from "./observab.service";
 export class GapiService {
   auth2:any;
   constructor(private zone:NgZone,private router:Router,
-              public observab: ObservabService) {
+              private observab: ObservabService) {
 
   }
   //登陆成功跳转路由

@@ -2,7 +2,7 @@
 <div id="dataPanel">
   <div #map id="map">
   </div>
-  <div class="dataPanelHeader" *ngIf="flag">
+  <div class="dataPanelHeader" *ngIf="iconFlag">
     <ul>
       <li>
         <span>location: USA</span>
@@ -35,7 +35,7 @@
       <li></li>
     </ul>
   </div>
-  <div [ngClass]="['dataPanelAside', flag ? 'translateParent' : 'translateParent1']">
+  <div [ngClass]="['dataPanelAside', iconFlag ? 'translateParentShow' : 'translateParentHidden']">
     <div class="AsideMain">
       <div class="AsideMainHeader">
         <div class="AsideMainHeaderGroup1">
@@ -51,10 +51,10 @@
       </div>
     </div>
     <div class = 'AsideIcon' (click) = 'onTransForm($event)'>
-        <img [ngClass]=" flag ? 'transformIcon1':'transformIcon'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
+        <img [ngClass]=" iconFlag ? 'transformIconHidden':'transformIconShow'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>
   </div>
-  <div class="dataPanelImg" *ngIf="flag">
+  <div class="dataPanelImg" *ngIf="iconFlag">
     <img src="assets/image/datapanel/Ellipse%203.png" alt="Ellipse的图片">
     <img src="assets/image/datapanel/Vector%2012.png" alt="Vector的图片">
   </div>

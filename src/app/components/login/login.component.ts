@@ -11,7 +11,7 @@ export class LoginComponent implements OnInit {
   auth2: any;
   constructor(private  router: Router,
               private zone: NgZone,
-              public gapiService:GapiService) {
+              private gapiService:GapiService) {
   }
 
   ngOnInit(): void {
