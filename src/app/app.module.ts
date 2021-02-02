@@ -7,6 +7,7 @@ import {GapiService} from './services/gapi.service';
 //引入服务
 import {JsonService} from './services/json.service';
 import {ObservabService} from './services/observab.service';
+import {HttpService}from './services/http.service';
 //引入angular的客户端请求的包
 import {HttpClientModule} from '@angular/common/http';
 //引入路由
@@ -30,9 +31,9 @@ import { UserHeaderComponent } from './public/user-header/user-header.component'
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [GapiService,JsonService,ObservabService],
+  providers: [GapiService,JsonService,ObservabService,HttpService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

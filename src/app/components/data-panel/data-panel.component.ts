@@ -3,7 +3,8 @@ import {ActivatedRoute} from "@angular/router";
 import {GapiService} from "../../services/gapi.service";
 import {JsonService} from '../../services/json.service';
 import {ObservabService} from "../../services/observab.service";
-import {DataLevel} from '../../interfaces/data-level';
+import {HttpService} from '../../services/http.service';
+import {translateType} from "@angular/compiler-cli/src/ngtsc/translator";
 @Component({
   selector: 'app-data-panel',
   templateUrl: './data-panel.component.html',
@@ -29,7 +30,8 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
               private gapiService: GapiService,
               private jsonService: JsonService,
               private observa: ObservabService,
-              private zone: NgZone) {
+              private zone: NgZone,
+              private http:HttpService) {
   }
 
   ngOnInit(): void {
@@ -83,7 +85,10 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
     this.loginName = data.Email;
     this.imgUrl = data.url;
   }
-
+  //得到天气的数据
+  getWeather(lat,lng){
+    this.http.getWeatherData(lat,lng)
+  }
   //得到子组件的数据
   getChild(b) {
     this.showHidden = b;
@@ -152,8 +157,9 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
           this.infoWindow.close()
     })
     //点击事件
-    multilyPolygon.addListener('click',()=>{
+    multilyPolygon.addListener('click',(e)=>{
       this.paintValue(dataLevel)
+      this.getWeather(e.latLng.lat(),e.latLng.lng())
     })
   }
 
@@ -185,8 +191,9 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
     polygon.addListener('mouseout',(e)=>{
         this.infoWindow.close()
     })
-    polygon.addListener('click',()=> {
+    polygon.addListener('click',(e)=> {
         this.paintValue(dataLevel)
+        this.getWeather(e.latLng.lat(),e.latLng.lng())
       }
     )
   }
