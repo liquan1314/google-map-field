@@ -54,6 +54,9 @@
         </div>
       </div>
     </div>
+    <div>
+      {{wetherData | json}}
+    </div>
     <div class = 'AsideIcon' (click) = 'onTransForm($event)'>
         <img [ngClass]=" iconFlag ? 'transformIconHidden':'transformIconShow'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>

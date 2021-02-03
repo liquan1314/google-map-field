@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ObservabService} from "./observab.service";
 
 @Injectable({
@@ -8,38 +8,26 @@ import {ObservabService} from "./observab.service";
 export class GapiService {
   auth2:any;
   constructor(private zone:NgZone,private router:Router,
-              private observab: ObservabService) {
-
+              private observab: ObservabService,
+              private route: ActivatedRoute) {
   }
   //登陆成功跳转路由
   navigateMap(value) {
     this.router.navigate(['./datapanel']).then(data=>{
-      console.log(data)
     }).catch(err=>{
       console.error(err)
     })
   }
 
   //初始化auth2这个对象，然后进行操作
-  initAuth2(btnText?:any){
+  initAuth2(btnText){
     gapi.load('auth2',()=>{
        //初始化auth2这个googleLogin
-      gapi.auth2.init({
-        client_id:'230743352788-70rprt9h848dccqharm10iv934hh1mjk.apps.googleusercontent.com',
-      }).then(data => {
-        this.auth2 = data
-        if(btnText){
-          this.attachSignin(btnText.nativeElement)
-        }else{
-          data.signOut().then(()=>{
-            this.zone.run(()=>{
-              this.router.navigate(['./login'])
-            })
-          })
-        }
-      }).catch(err => {
-        console.log(err)
+      this.auth2 = gapi.auth2.init({
+        client_id: '230743352788-70rprt9h848dccqharm10iv934hh1mjk.apps.googleusercontent.com',
       })
+      this.attachSignin(btnText.nativeElement)
+      this.signInListener()
     })
   }
   attachSignin(ele) {
@@ -55,15 +43,29 @@ export class GapiService {
       queryMap = {
         queryParams: params
       }
-
       //触发观察这模式，因为数据变动触发了订阅
       this.observab.emit(params)
-
       this.zone.run(()=>{
         this.navigateMap(queryMap)
       })
     }, (err) => {
       console.log(err)
+    })
+  }
+  //登出的功能
+  signOut(){
+    this.auth2.signOut().then(()=>{
+        this.zone.run(()=>{
+          this.router.navigate(['login'])
+        })
+    })
+  }
+  signInListener(){
+    this.auth2.isSignedIn.listen((val)=>{
+      if(val === false){
+        this.zone.run(()=>{})
+        this.router.navigate(['login'],{relativeTo:this.route,replaceUrl:true})
+      }
     })
   }
 }

@@ -1,16 +1,15 @@
-import {AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, DoCheck, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {GapiService} from "../../services/gapi.service";
 import {JsonService} from '../../services/json.service';
 import {ObservabService} from "../../services/observab.service";
 import {HttpService} from '../../services/http.service';
-import {translateType} from "@angular/compiler-cli/src/ngtsc/translator";
 @Component({
   selector: 'app-data-panel',
   templateUrl: './data-panel.component.html',
   styleUrls: ['./data-panel.component.scss']
 })
-export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
+export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoCheck{
   @ViewChild(('map')) map;
   @ViewChild(('infowindow')) infowindow;
   googleMap: any; //地图
@@ -25,7 +24,9 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
   NE:any;
   OE:any;
   filed:any;
-
+  multilyPolygon:any;
+  polygon: any;
+  wetherData:any;
   constructor(private route: ActivatedRoute,
               private gapiService: GapiService,
               private jsonService: JsonService,
@@ -37,14 +38,18 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
   ngOnInit(): void {
     this.getValue()
     this.getServiceData()
+    this.getWeahterData()
+  }
+  ngDoCheck() {
   }
 
   ngAfterViewInit() {
     this.initMap()
   }
   ngOnDestroy() {
-    //清楚资源
-    this.googleMap.removeAllListeners()
+    //清除资源
+    google.maps.event.clearInstanceListeners(this.polygon);
+    google.maps.event.clearInstanceListeners(this.multilyPolygon)
   }
 
   //得到服务中的地图数据
@@ -87,7 +92,12 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
   }
   //得到天气的数据
   getWeather(lat,lng){
-    this.http.getWeatherData(lat,lng)
+     this.http.getWeatherData(lat,lng)
+  }
+  getWeahterData(){
+    this.http.listen.subscribe(data=>{
+      this.wetherData = data['main'];
+    })
   }
   //得到子组件的数据
   getChild(b) {
@@ -96,7 +106,7 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
 
   //登出功能
   signOut() {
-    this.gapiService.initAuth2()
+    this.gapiService.signOut()
   }
 
   //给地图绘制图形
@@ -140,24 +150,24 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
     }
 
     //绘制多边形
-    let multilyPolygon = new google.maps.Polygon({
+    this.multilyPolygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
       strokeWeight: 0
     })
-    multilyPolygon.setMap(this.googleMap)
+    this.multilyPolygon.setMap(this.googleMap)
 
-    multilyPolygon.addListener('mouseover', (e) => {
+    this.multilyPolygon.addListener('mouseover', (e) => {
             if(!this.infoWindow){
               this.infoWindowSet(time,e)
             }
     })
     //当离开当前的polygon的时候
-    multilyPolygon.addListener('mouseout',(e)=>{
+    this.multilyPolygon.addListener('mouseout',(e)=>{
           this.infoWindow.close()
     })
     //点击事件
-    multilyPolygon.addListener('click',(e)=>{
+    this.multilyPolygon.addListener('click',(e)=>{
       this.paintValue(dataLevel)
       this.getWeather(e.latLng.lat(),e.latLng.lng())
     })
@@ -179,19 +189,19 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy{
       obj.lng = item.longitude;
       return obj
     })
-    let polygon = new google.maps.Polygon({
+     this.polygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
       strokeWeight: 0
     })
-    polygon.setMap(this.googleMap)
-    polygon.addListener('mouseover', (e) => {
+    this.polygon.setMap(this.googleMap)
+    this.polygon.addListener('mouseover', (e) => {
         this.infoWindowSet(time,e)
     })
-    polygon.addListener('mouseout',(e)=>{
+    this.polygon.addListener('mouseout',(e)=>{
         this.infoWindow.close()
     })
-    polygon.addListener('click',(e)=> {
+    this.polygon.addListener('click',(e)=> {
         this.paintValue(dataLevel)
         this.getWeather(e.latLng.lat(),e.latLng.lng())
       }
