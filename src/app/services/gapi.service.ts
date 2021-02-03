@@ -63,7 +63,9 @@ export class GapiService {
   signInListener(){
     this.auth2.isSignedIn.listen((val)=>{
       if(val === false){
+        let params = null;
         this.zone.run(()=>{})
+        // this.observab.emit(params)
         this.router.navigate(['login'],{relativeTo:this.route,replaceUrl:true})
       }
     })

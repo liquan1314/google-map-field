@@ -48,8 +48,7 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
   }
   ngOnDestroy() {
     //清除资源
-    google.maps.event.clearInstanceListeners(this.polygon);
-    google.maps.event.clearInstanceListeners(this.multilyPolygon)
+    google.maps.event.clearInstanceListeners(this.googleMap)
   }
 
   //得到服务中的地图数据
@@ -150,26 +149,29 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
     }
 
     //绘制多边形
-    this.multilyPolygon = new google.maps.Polygon({
+    let multilyPolygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
       strokeWeight: 0
     })
-    this.multilyPolygon.setMap(this.googleMap)
-
-    this.multilyPolygon.addListener('mouseover', (e) => {
+    multilyPolygon.setMap(this.googleMap)
+    multilyPolygon.addListener('mouseover', (e) => {
             if(!this.infoWindow){
               this.infoWindowSet(time,e)
             }
     })
     //当离开当前的polygon的时候
-    this.multilyPolygon.addListener('mouseout',(e)=>{
+    multilyPolygon.addListener('mouseout',(e)=>{
           this.infoWindow.close()
     })
     //点击事件
-    this.multilyPolygon.addListener('click',(e)=>{
+    multilyPolygon.addListener('click',(e)=>{
       this.paintValue(dataLevel)
       this.getWeather(e.latLng.lat(),e.latLng.lng())
+      multilyPolygon.setOptions({
+        strokeOpacity:0.2,
+        fillOpacity:1
+      })
     })
   }
 
@@ -189,23 +191,26 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
       obj.lng = item.longitude;
       return obj
     })
-     this.polygon = new google.maps.Polygon({
+     let polygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
       strokeWeight: 0
     })
-    this.polygon.setMap(this.googleMap)
-    this.polygon.addListener('mouseover', (e) => {
+    polygon.setMap(this.googleMap)
+    polygon.addListener('mouseover', (e) => {
         this.infoWindowSet(time,e)
     })
-    this.polygon.addListener('mouseout',(e)=>{
-        this.infoWindow.close()
+    polygon.addListener('mouseout',(e)=>{
+      this.infoWindow.close()
     })
-    this.polygon.addListener('click',(e)=> {
-        this.paintValue(dataLevel)
-        this.getWeather(e.latLng.lat(),e.latLng.lng())
-      }
-    )
+    polygon.addListener('click',(e)=>{
+      this.paintValue(dataLevel)
+      this.getWeather(e.latLng.lat(),e.latLng.lng())
+      polygon.setOptions({
+        strokeOpacity:0.2,
+        fillOpacity:1
+      })
+    })
   }
 
   infoWindowSet(time,e){
