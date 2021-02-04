@@ -4,12 +4,13 @@ import {GapiService} from "../../services/gapi.service";
 import {JsonService} from '../../services/json.service';
 import {ObservabService} from "../../services/observab.service";
 import {HttpService} from '../../services/http.service';
+
 @Component({
   selector: 'app-data-panel',
   templateUrl: './data-panel.component.html',
   styleUrls: ['./data-panel.component.scss']
 })
-export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoCheck{
+export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck {
   @ViewChild(('map')) map;
   @ViewChild(('infowindow')) infowindow;
   googleMap: any; //地图
@@ -20,19 +21,21 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
   imgUrl: any; //路径的位置
   showHidden: boolean = false; //资料卡片显示或隐藏
   infoWindow: any;
-  US:any;
-  NE:any;
-  OE:any;
-  filed:any;
-  multilyPolygon:any;
+  US: any;
+  NE: any;
+  OE: any;
+  filed: any;
+  multilyPolygon: any;
   polygon: any;
-  wetherData:any;
+  wetherData: any;
+  mulityPolygonArr:any[] = [];
+  polygonArr:any[] = [];
   constructor(private route: ActivatedRoute,
               private gapiService: GapiService,
               private jsonService: JsonService,
               private observa: ObservabService,
               private zone: NgZone,
-              private http:HttpService) {
+              private http: HttpService) {
   }
 
   ngOnInit(): void {
@@ -40,15 +43,24 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
     this.getServiceData()
     this.getWeahterData()
   }
+
   ngDoCheck() {
+
   }
 
   ngAfterViewInit() {
     this.initMap()
+    this.removeColor()
   }
+
   ngOnDestroy() {
     //清除资源
-    google.maps.event.clearInstanceListeners(this.googleMap)
+    this.polygonArr.forEach(item=>{
+      google.maps.event.clearInstanceListeners(item)
+    })
+    this.mulityPolygonArr.forEach(item=>{
+      google.maps.event.clearInstanceListeners(item)
+    })
   }
 
   //得到服务中的地图数据
@@ -80,7 +92,7 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
 
   //点击图标事件
   onTransForm(e) {
-      this.iconFlag = !this.iconFlag;
+    this.iconFlag = !this.iconFlag;
   }
 
   getValue() {
@@ -89,15 +101,18 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
     this.loginName = data.Email;
     this.imgUrl = data.url;
   }
+
   //得到天气的数据
-  getWeather(lat,lng){
-     this.http.getWeatherData(lat,lng)
+  getWeather(lat, lng) {
+    this.http.getWeatherData(lat, lng)
   }
-  getWeahterData(){
-    this.http.listen.subscribe(data=>{
+
+  getWeahterData() {
+    this.http.listen.subscribe(data => {
       this.wetherData = data['main'];
     })
   }
+
   //得到子组件的数据
   getChild(b) {
     this.showHidden = b;
@@ -120,16 +135,16 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
       //进行判断是是polygon和multiplePolygon
       if (arr.length !== 1) {
         //这里是multiplePolygon
-        this.paintMultiPlePolygon(arr, type, time,dataLevel)
+        this.paintMultiPlePolygon(arr, type, time, dataLevel)
       } else {
         /*单个polygon*/
-        this.paintPolygon(arr, type, time,dataLevel)
+        this.paintPolygon(arr, type, time, dataLevel)
       }
     })
   }
 
   //绘制multiplePolygon
-  paintMultiPlePolygon(data, type, time,dataLevel) {
+  paintMultiPlePolygon(data, type, time, dataLevel) {
     time = this.transformTime(time)
     dataLevel = this.getDataLevel(dataLevel)
     let arr = []
@@ -154,30 +169,32 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
       fillColor: color,
       strokeWeight: 0
     })
+    this.mulityPolygonArr.push(multilyPolygon);
     multilyPolygon.setMap(this.googleMap)
     multilyPolygon.addListener('mouseover', (e) => {
-            if(!this.infoWindow){
-              this.infoWindowSet(time,e)
-            }
+      if (!this.infoWindow) {
+        this.infoWindowSet(time, e)
+      }
+      multilyPolygon.setOptions({
+        strokeWeight: 2,
+        strokeColor: '#e6e6e6',
+        fillOpacity: 1
+      })
     })
     //当离开当前的polygon的时候
-    multilyPolygon.addListener('mouseout',(e)=>{
-          this.infoWindow.close()
+    multilyPolygon.addListener('mouseout', (e) => {
+      this.infoWindow.close()
     })
     //点击事件
-    multilyPolygon.addListener('click',(e)=>{
+    multilyPolygon.addListener('click', (e) => {
       this.paintValue(dataLevel)
-      this.getWeather(e.latLng.lat(),e.latLng.lng())
-      multilyPolygon.setOptions({
-        strokeOpacity:0.2,
-        fillOpacity:1
-      })
+      this.getWeather(e.latLng.lat(), e.latLng.lng())
     })
   }
 
 
   //绘制简单的polygon
-  paintPolygon(data, type, time,dataLevel) {
+  paintPolygon(data, type, time, dataLevel) {
     dataLevel = this.getDataLevel(dataLevel)
     time = this.transformTime(time); //得到时间
     let arr = data[0].point;
@@ -191,29 +208,31 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
       obj.lng = item.longitude;
       return obj
     })
-     let polygon = new google.maps.Polygon({
+    let polygon = new google.maps.Polygon({
       paths: arr,
       fillColor: color,
       strokeWeight: 0
     })
+    this.polygonArr.push(polygon)
     polygon.setMap(this.googleMap)
     polygon.addListener('mouseover', (e) => {
-        this.infoWindowSet(time,e)
+      this.infoWindowSet(time, e)
+      polygon.setOptions({
+        strokeWeight: 2,
+        strokeColor: '#e6e6e6',
+        fillOpacity: 1
+      })
     })
-    polygon.addListener('mouseout',(e)=>{
+    polygon.addListener('mouseout', (e) => {
       this.infoWindow.close()
     })
-    polygon.addListener('click',(e)=>{
+    polygon.addListener('click', (e) => {
       this.paintValue(dataLevel)
-      this.getWeather(e.latLng.lat(),e.latLng.lng())
-      polygon.setOptions({
-        strokeOpacity:0.2,
-        fillOpacity:1
-      })
+      this.getWeather(e.latLng.lat(), e.latLng.lng())
     })
   }
 
-  infoWindowSet(time,e){
+  infoWindowSet(time, e) {
     //判断infowindow是否存在，不在就添加，在的话先取消当前的infowindow在添加
     this.initInfoWindow(time)
     this.infoWindow.setPosition(e.latLng)
@@ -264,12 +283,32 @@ export class DataPanelComponent implements OnInit,AfterViewInit,OnDestroy,DoChec
     const arrDataLevel = datalevel.split('/')
     return arrDataLevel;
   }
+
   //给导航栏上添加数据
-  paintValue(dataLevel){
+  paintValue(dataLevel) {
     this.US = dataLevel[0];
     this.NE = dataLevel[1]
     this.OE = dataLevel[2]
     this.filed = dataLevel[3]
+  }
+  removeColor(){
+    google.maps.event.addDomListener(this.googleMap,'click',()=>{
+      console.log(1)
+      this.mulityPolygonArr.forEach(item=>{
+        item.setOptions({
+          strokeWeight: 0,
+          strokeColor: '#e6e6e6',
+          fillOpacity: 0.3
+        })
+      })
+      this.polygonArr.forEach(item=>{
+        item.setOptions({
+          strokeWeight: 0,
+          strokeColor: '#e6e6e6',
+          fillOpacity: 0.3
+        })
+      })
+    })
   }
 
 }
