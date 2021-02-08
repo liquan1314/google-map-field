@@ -4,7 +4,7 @@ import {from} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class JsonService {
+export class MockJsonService {
 
   constructor(public http: HttpClient) {
 

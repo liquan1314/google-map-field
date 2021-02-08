@@ -1,7 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+//@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import './assets/color.scss';
 *{
   margin: 0;
   padding: 0;
 }
 //生成一个弹性容器通用的混合器
 
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,4 +1,3 @@
-
 <div id="dataPanel">
   <div #map id="map">
   </div>
@@ -40,6 +39,12 @@
     </ul>
   </div>
   <div [ngClass]="['dataPanelAside', iconFlag ? 'translateParentShow' : 'translateParentHidden']">
+    <div class="top">
+      <div><img src="assets/image/datapanel/CombinedShape.png" alt="logo"></div>
+      <div class="topIpt">
+        <span><img src="assets/image/datapanel/search.png" alt="搜索框"></span><input type="text" placeholder="search">
+      </div>
+    </div>
     <div class="AsideMain">
       <div class="AsideMainHeader">
         <div class="AsideMainHeaderGroup1">
@@ -52,11 +57,29 @@
         <div class="AsideMainHeaderContent">
           AsideMainHeader
         </div>
+        <div class="asideRoute">
+          <div class="asideRouteMain">
+              <div>
+                  <img src="assets/image/datapanel/track_changes_24px.png" alt="图标">
+                 <span>Find Similar Fields</span>
+              </div>
+              <div>
+                  <img src="assets/image/datapanel/dns_24px.png" alt="图标">
+                <span>Compare Fields</span>
+              </div>
+              <div [routerLink]="['panel']" routerLinkActive="active">
+                  <img src="assets/image/datapanel/tune_24px.png" alt="图标">
+                  <span>Filter Fields</span>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class = 'AsideIcon' (click) = 'onTransForm($event)'>
-        <img [ngClass]=" iconFlag ? 'transformIconHidden':'transformIconShow'" src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
+    <div class='AsideIcon' (click)='onTransForm($event)'>
+      <img [ngClass]=" iconFlag ? 'transformIconHidden':'transformIconShow'"
+           src="assets/image/datapanel/arrow_drop_down_24px.png" alt="icon图片">
     </div>
+    <router-outlet></router-outlet>
   </div>
   <div class="personalInfo" *ngIf="showHidden">
     <img [src]="imgUrl" alt="headerInfoImg">
@@ -65,5 +88,5 @@
     <span (click)="signOut()">Log out</span>
   </div>
   <app-aside></app-aside>
-  <app-user-header [imgUrl] = 'imgUrl' (showHidden)="getChild($event)"></app-user-header>
+  <app-user-header [imgUrl]='imgUrl' (showHidden)="getChild($event)"></app-user-header>
 </div>

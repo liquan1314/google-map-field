@@ -1,0 +1,23 @@
+<mat-grid-list cols="2" rowHeight="4:1">
+  <mat-grid-tile>Crops</mat-grid-tile>
+  <mat-grid-tile>
+    2
+  </mat-grid-tile>
+  <ng-container *ngFor="let item of listArr">
+    <mat-grid-tile>
+      {{item.name}}
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <mat-slider
+        thumbLabel
+        [max]="item.slider.max"
+        [min]="item['slider'].min"
+        [(ngModel)]="item.slider.value"
+        (change)="emitData()"
+      >
+      </mat-slider>
+      {{item.slider.value}}
+    </mat-grid-tile>
+
+  </ng-container>
+</mat-grid-list>

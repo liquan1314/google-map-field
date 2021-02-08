@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ObservabService {
+export class ObservaberUserLoginService {
 
   constructor() { }
   data:any;

@@ -1,6 +1,6 @@
 import {Injectable, NgZone} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {ObservabService} from "./observab.service";
+import {ObservaberUserLoginService} from "./observaberUserLogin.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import {ObservabService} from "./observab.service";
 export class GapiService {
   auth2:any;
   constructor(private zone:NgZone,private router:Router,
-              private observab: ObservabService,
+              private observab: ObservaberUserLoginService,
               private route: ActivatedRoute) {
   }
   //登陆成功跳转路由

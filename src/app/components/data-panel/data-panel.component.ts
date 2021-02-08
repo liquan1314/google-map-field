@@ -1,9 +1,11 @@
 import {AfterViewInit, Component, DoCheck, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {GapiService} from "../../services/gapi.service";
-import {JsonService} from '../../services/json.service';
-import {ObservabService} from "../../services/observab.service";
+import {MockJsonService} from '../../services/mockJson.service';
+import {ObservaberUserLoginService} from "../../services/observaberUserLogin.service";
 import {HttpService} from '../../services/http.service';
+import {ShowHiddenService} from '../../serveces/show-hidden.service';
+import {PanelDataService} from '../../services/panel-data.service';
 
 @Component({
   selector: 'app-data-panel',
@@ -28,20 +30,26 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   multilyPolygon: any;
   polygon: any;
   wetherData: any;
-  mulityPolygonArr:any[] = [];
-  polygonArr:any[] = [];
+  mulityPolygonArr: any[] = [];
+  polygonArr: any[] = [];
+  filterData: any;
+  distanceObjArr: any[] = [];//这是多边形的属性数组
+  panelArr: any[] = [];
   constructor(private route: ActivatedRoute,
               private gapiService: GapiService,
-              private jsonService: JsonService,
-              private observa: ObservabService,
+              private jsonService: MockJsonService,
+              private observa: ObservaberUserLoginService,
               private zone: NgZone,
-              private http: HttpService) {
+              private http: HttpService,
+              private showHiddenService: ShowHiddenService,
+              private panelDataService: PanelDataService) {
   }
 
   ngOnInit(): void {
     this.getValue()
     this.getServiceData()
     this.getWeahterData()
+    this.getFilterData()
   }
 
   ngDoCheck() {
@@ -50,16 +58,129 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   ngAfterViewInit() {
     this.initMap()
-    this.removeColor()
+    // this.removeColor()
   }
 
   ngOnDestroy() {
     //清除资源
-    this.polygonArr.forEach(item=>{
+    this.polygonArr.forEach(item => {
       google.maps.event.clearInstanceListeners(item)
     })
-    this.mulityPolygonArr.forEach(item=>{
+    this.mulityPolygonArr.forEach(item => {
       google.maps.event.clearInstanceListeners(item)
+    })
+  }
+
+  //得到属性每个值的区间
+  getSection() {
+    let arr = [];
+    for (let i = 0; i < this.distanceObjArr.length; i++) {
+      let item = this.distanceObjArr[i].data;
+      //求最大值和最小值的区间
+      arr.push(item)
+    }
+    //求到我们需要求的key值
+    let arr1 = []
+    for (let i = 0; i < arr[0].length; i++) {
+      let key = Object.keys(arr[0][i])
+      arr1.push(key[0])
+    }
+    //求到每个值的最小和最大区间，并分别给他们命名
+    let arr2 = []; //这是得到distance_to_water_in_meters值的数组
+    let arr3 = []; //这是得到distance_to_town_in_meters的值的数组
+    let arr4 = []; //这是得到distance_to_road_in_meters的值的数组
+    arr1.forEach(item => {
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[i].length; j++) {
+          let key = Object.keys(arr[i][j])
+          let value = Object.values(arr[i][j])
+          if (key[0] === 'distance_to_water_in_meters') {
+            // @ts-ignore
+            if (!isNaN(value[0])) {
+              arr2.push(value[0])
+            }
+          }
+          if (key[0] === 'distance_to_town_in_meters') {
+            //因为我已经明确知道这个值的数据类型，所以用了类型断言
+            if (!isNaN(<number>value[0])) {
+              arr3.push(value[0])
+            }
+          }
+          if (key[0] === 'distance_to_road_in_meters') {
+            if (!isNaN(<number>value[0])) {
+              arr4.push(value[0])
+            }
+          }
+        }
+      }
+    })
+    //max2 min2 分别是distance_to_water_in_meters的最大值和最小值
+    let max2 = parseInt(Math.max.apply(Math, arr2))
+    let min2 = parseInt(Math.min.apply(Math, arr2))
+    //max3和min3分别是distance_to_town_in_meters的最大值和最小值
+    let max3 = Math.floor((Math.max.apply(Math, arr3)))
+    let min3 = parseInt(Math.min.apply(Math, arr3))
+    //max4和min4分别是distance_to_road_in_meters的最大值和最小值
+    let max4 = parseInt(Math.max.apply(Math, arr4))
+    let min4 = parseInt(Math.min.apply(Math, arr4))
+    //arr5是为了让我更好的取得最大值和最小值的值
+    let arr5 = [[max2, min2], [max3, min3], [max4, min4]]
+    let index = 0
+
+    //得到传递给二级路由panel的数据
+    arr1.forEach(item => {
+      let max = arr5[index][0];
+      let min = arr5[index][1]
+      let obj = {
+        name: item,
+        slider: {
+          max: max,
+          min: min,
+          values: min
+        }
+      }
+      this.panelArr.push(obj)
+      index++
+    })
+    //使用服务让子路由得到我们发设的值
+    this.panelDataService.emitData(this.panelArr)
+  }
+
+  filtShap() {
+    this.filterData = Array.from(this.filterData)
+    let arr = []
+    for (let i = 0; i < this.filterData.length; i++) {
+      let obj = {
+        values: this.filterData[i].slider.value,
+        max: this.filterData[i].slider.max
+      }
+      arr.push(obj)
+    }
+    for (let i = 0; i < this.distanceObjArr.length; i++) {
+      let item = this.distanceObjArr[i];
+      let value0 = item.data[0]['distance_to_water_in_meters'];
+      let value1 = item.data[1]['distance_to_town_in_meters'];
+      let value2 = item.data[2]['distance_to_road_in_meters'];
+      if (value0 < arr[0].values || value0 > arr[0].max ||
+        value1 < arr[1].values || value1 > arr[1].max ||
+        value2 < arr[2].values || value2 > arr[2].max
+      ) {
+        item.name.setOptions({
+          fillOpacity: 0
+        })
+      } else {
+        item.name.setOptions({
+          fillOpacity: .3
+        })
+      }
+    }
+  }
+
+
+  getFilterData() {
+    this.showHiddenService.listen.subscribe(data => {
+      this.filterData = data;  //得到改变后的数据
+      this.filtShap()
     })
   }
 
@@ -67,7 +188,10 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   getServiceData() {
     this.jsonService.getData().subscribe(data => {
       this.paintMap(data)
+      //运行区间
+      this.getSection()
     })
+
   }
 
   //初始化地图的函数
@@ -94,7 +218,7 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
   onTransForm(e) {
     this.iconFlag = !this.iconFlag;
   }
-
+  //得到用户的登录信息
   getValue() {
     const data = this.observa.getData();
     this.loginEmail = data.personname;
@@ -109,6 +233,7 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
   getWeahterData() {
     this.http.listen.subscribe(data => {
+      console.log(data)
       this.wetherData = data['main'];
     })
   }
@@ -131,20 +256,28 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       const type = item.properties['crop_type'][0]['value'];
       const time = item.data[0]['time_range']['start']['seconds']
       const dataLevel = item.data[0]['administration_level']
-      // console.log(item.data[0]['time_range'])
+      const distanceWater = item.properties['distance_to_water_in_meters']['value'] * 1000
+      const distanceTown = item.properties['distance_to_town_in_meters']['value'] * 1000
+      const distanceRoad = item.properties['distance_to_road_in_meters']['value'] * 1000
+      const distanceObj = [
+        {'distance_to_water_in_meters': distanceWater},
+        {'distance_to_town_in_meters': distanceTown},
+        {'distance_to_road_in_meters': distanceRoad}
+      ]
       //进行判断是是polygon和multiplePolygon
       if (arr.length !== 1) {
         //这里是multiplePolygon
-        this.paintMultiPlePolygon(arr, type, time, dataLevel)
+        this.paintMultiPlePolygon(arr, type, time, dataLevel, distanceObj)
       } else {
         /*单个polygon*/
-        this.paintPolygon(arr, type, time, dataLevel)
+        this.paintPolygon(arr, type, time, dataLevel, distanceObj)
       }
     })
   }
 
   //绘制multiplePolygon
-  paintMultiPlePolygon(data, type, time, dataLevel) {
+  paintMultiPlePolygon(data, type, time, dataLevel, distanceObj) {
+
     time = this.transformTime(time)
     dataLevel = this.getDataLevel(dataLevel)
     let arr = []
@@ -169,7 +302,14 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       fillColor: color,
       strokeWeight: 0
     })
+    let obj = {
+      name: multilyPolygon,
+      data: distanceObj
+    }
+    this.distanceObjArr.push(obj)
+
     this.mulityPolygonArr.push(multilyPolygon);
+
     multilyPolygon.setMap(this.googleMap)
     multilyPolygon.addListener('mouseover', (e) => {
       if (!this.infoWindow) {
@@ -184,6 +324,11 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     //当离开当前的polygon的时候
     multilyPolygon.addListener('mouseout', (e) => {
       this.infoWindow.close()
+      multilyPolygon.setOptions({
+        strokeWeight: 2,
+        strokeColor: '#e6e6e6',
+        fillOpacity: .3
+      })
     })
     //点击事件
     multilyPolygon.addListener('click', (e) => {
@@ -194,7 +339,8 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
 
 
   //绘制简单的polygon
-  paintPolygon(data, type, time, dataLevel) {
+  paintPolygon(data, type, time, dataLevel, distanceObj) {
+    //distanceObj 是过滤面板的数据
     dataLevel = this.getDataLevel(dataLevel)
     time = this.transformTime(time); //得到时间
     let arr = data[0].point;
@@ -213,6 +359,11 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
       fillColor: color,
       strokeWeight: 0
     })
+    let obj = {
+      name: polygon,
+      data: distanceObj
+    }
+    this.distanceObjArr.push(obj)
     this.polygonArr.push(polygon)
     polygon.setMap(this.googleMap)
     polygon.addListener('mouseover', (e) => {
@@ -225,6 +376,11 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     })
     polygon.addListener('mouseout', (e) => {
       this.infoWindow.close()
+      polygon.setOptions({
+        strokeWeight: 2,
+        strokeColor: '#e6e6e6',
+        fillOpacity: .3
+      })
     })
     polygon.addListener('click', (e) => {
       this.paintValue(dataLevel)
@@ -291,17 +447,17 @@ export class DataPanelComponent implements OnInit, AfterViewInit, OnDestroy, DoC
     this.OE = dataLevel[2]
     this.filed = dataLevel[3]
   }
-  removeColor(){
-    google.maps.event.addDomListener(this.googleMap,'click',()=>{
-      console.log(1)
-      this.mulityPolygonArr.forEach(item=>{
+
+  removeColor() {
+    google.maps.event.addDomListener(this.googleMap, 'click', () => {
+      this.mulityPolygonArr.forEach(item => {
         item.setOptions({
           strokeWeight: 0,
           strokeColor: '#e6e6e6',
           fillOpacity: 0.3
         })
       })
-      this.polygonArr.forEach(item=>{
+      this.polygonArr.forEach(item => {
         item.setOptions({
           strokeWeight: 0,
           strokeColor: '#e6e6e6',

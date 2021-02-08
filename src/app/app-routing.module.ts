@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule,Routes} from '@angular/router';
 import {AuthGuard} from './auth/auth.guard';
+import {PanelComponent} from './components/panel/panel.component';
 /*
   生成一个路由模块，在cli中运行指令
    ng g module app-routing --flat --module=app
@@ -14,7 +15,12 @@ import {LoginComponent} from './components/login/login.component';
 
 let routes: Routes=[
   {path:'login',component:LoginComponent},
-  {path:'datapanel',component:DataPanelComponent,canActivate:[AuthGuard]},
+  {path:'datapanel',
+    component:DataPanelComponent,
+    children:[
+      {path:'panel',component:PanelComponent}
+    ],
+    canActivate:[AuthGuard]},
   {path:'',redirectTo:'/login',pathMatch:'full'} //redirect login
 ]
 @NgModule({
