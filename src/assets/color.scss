@@ -1,0 +1,17 @@
+//引入material中的theming，里面有混合器
+@import '~@angular/material/theming';
+//导入核心混合器，确保只导入一次
+@include mat-core();
+
+//定义主调色版
+$candy-app-primary:mat-palette($mat-red);
+
+//强调调色板
+$candy-app-accent:mat-palette($mat-blue);
+
+//警告色版
+$candy-app-warn:mat-palette($mat-yellow);
+
+//创建主题，可以创建一个亮色主题light-theming或者深色主题dark-theming
+$candy-app-theme:mat-light-theme($candy-app-primary,$candy-app-accent,$candy-app-warn)
+
