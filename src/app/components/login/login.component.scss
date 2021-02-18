@@ -1,10 +1,14 @@
+@mixin flexCenter{
+  display: flex;
+  align-items: center;
+}
+
 #map{
   width: 100vw;
   height: 100vh;
   background: #fff url('../../../assets/image/login/bgImg.png') no-repeat center/cover;
-  display: flex;
+  @include flexCenter;
   justify-content: center;
-  align-items: center;
   #group{
     width: 704px;
     height: 748px;
@@ -13,9 +17,8 @@
     0px 1px 10px rgba(0, 0, 0, 0.12),
     0px 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
-    display: flex;
+    @include flexCenter;
     flex-direction: column;
-    align-items: center;
     .filebrowser{
       width: 120px;
       height: 120px;
@@ -50,8 +53,7 @@
       width: 256px;
       height: 64px;
       margin-top: 72px;
-      display: flex;
-      align-items: center;
+     @include flexCenter;
       background: url('../../../assets/image/login/Group.png') no-repeat scroll center/cover;
       cursor: pointer;
     }
